@@ -1,20 +1,20 @@
-import { useState } from "react";
+// import { useState } from "react";
 import { ChatBot } from "../../components/Chatbot/ChatBot";
 import {
   Sparkles,
-  MessageSquare,
-  Zap,
-  Shield,
-  ChevronDown,
-  ChevronRight,
+  // MessageSquare,
+  // Zap,
+  // Shield,
+  // ChevronDown,
+  // ChevronRight,
 } from "lucide-react";
 
 export function Home() {
-  const [showFeatures, setShowFeatures] = useState(false);
+  // const [showFeatures, setShowFeatures] = useState(false);
 
-  const toggleFeatures = () => {
-    setShowFeatures(!showFeatures);
-  };
+  // const toggleFeatures = () => {
+  //   setShowFeatures(!showFeatures);
+  // };
 
   return (
     <div className="flex flex-col min-h-screen bg-gradient-to-b from-gray-50 to-gray-100">
@@ -60,7 +60,7 @@ export function Home() {
             </div> */}
 
         <ChatBot />
-
+        {/* 
         <div className="w-full max-w-4xl mx-auto mb-16">
           <div
             className="flex items-center justify-between cursor-pointer p-4 rounded-lg bg-gray-50 hover:bg-gray-100 transition-colors mb-6"
@@ -118,9 +118,9 @@ export function Home() {
               </div>
             </div>
           )}
-        </div>
+        </div> */}
 
-        <div className="w-full max-w-4xl mx-auto bg-blue-50 rounded-lg p-8 border border-blue-100">
+        {/* <div className="w-full max-w-4xl mx-auto bg-blue-50 rounded-lg p-8 border border-blue-100">
           <div className="flex flex-col items-center text-center">
             <p className="text-lg italic text-gray-700 mb-4">
               "O Lumino revolucionou a forma como interagimos com informações. É
@@ -134,7 +134,7 @@ export function Home() {
               </div>
             </div>
           </div>
-        </div>
+        </div> */}
       </main>
     </div>
   );
