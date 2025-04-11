@@ -1,13 +1,15 @@
 // import { useState } from "react";
 import { ChatBot } from "../../components/Chatbot/ChatBot";
 import {
-  Sparkles,
+  // Sparkles,
   // MessageSquare,
   // Zap,
   // Shield,
   // ChevronDown,
   // ChevronRight,
 } from "lucide-react";
+import { Header } from "../../components/Header/Header";
+// import { Footer } from "../../components/Footer/Footer";
 
 export function Home() {
   // const [showFeatures, setShowFeatures] = useState(false);
@@ -18,8 +20,9 @@ export function Home() {
 
   return (
     <div className="flex flex-col min-h-screen bg-gradient-to-b from-gray-50 to-gray-100">
+      <Header/> 
       <main className="flex-grow flex flex-col items-center px-4 py-10">
-        <div className="text-center mb-12 max-w-3xl mx-auto">
+        {/* <div className="text-center mb-12 max-w-3xl mx-auto">
           <div className="inline-flex items-center justify-center bg-blue-100 text-blue-600 px-4 py-1 rounded-full mb-6">
             <Sparkles size={16} className="mr-2" />
             <span className="text-sm font-medium">Nova Versão Disponível</span>
@@ -39,15 +42,15 @@ export function Home() {
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-8">
-            {/* <button className="w-full sm:w-auto px-6 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center">
+            <button className="w-full sm:w-auto px-6 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center">
               <MessageSquare size={18} className="mr-2" />
               Iniciar Chat
             </button>
             <button className="w-full sm:w-auto px-6 py-3 border border-gray-300 text-gray-700 font-medium rounded-lg hover:bg-gray-100 transition-colors flex items-center justify-center">
               Saiba Mais
-            </button> */}
+            </button>
           </div>
-        </div>
+        </div> */}
         {/* 
             <div className="w-full max-w-4xl mx-auto mb-16 bg-white rounded-xl shadow-lg overflow-hidden border border-gray-200">
             <div className="bg-gray-50 border-b border-gray-200 px-6 py-3 flex items-center">
@@ -136,6 +139,7 @@ export function Home() {
           </div>
         </div> */}
       </main>
+      {/* <Footer/> */}
     </div>
   );
 }
