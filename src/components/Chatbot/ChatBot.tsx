@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { ChatMessage } from "./ChatMessage";
 import { InputBar } from "./InputBar";
-import { getBotResponse } from "../../services/chatbotAPI";
+import { promptGemini } from "../../services/chatbotAPI";
 import { Message } from "../../types/index";
 import { Bot, Trash2, Download, Settings, X } from "lucide-react";
 
@@ -16,7 +16,6 @@ export function ChatBot() {
     scrollToBottom();
   }, [messages]);
 
-  // Initial welcome message
   useEffect(() => {
     if (showWelcome && messages.length === 0) {
       const welcomeMessage: Message = {
@@ -43,7 +42,7 @@ export function ChatBot() {
     setIsLoading(true);
 
     try {
-      const botReply = await getBotResponse(userText);
+      const botReply = await promptGemini(userText);
 
       setIsLoading(false);
 
@@ -55,6 +54,7 @@ export function ChatBot() {
 
       setMessages((prev) => [...prev, botMessage]);
     } catch (error) {
+      console.error("Erro ao obter resposta do Gemini:", error);
       setIsLoading(false);
       const errorMessage: Message = {
         sender: "bot",

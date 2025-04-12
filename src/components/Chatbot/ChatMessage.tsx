@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   ThumbsUp,
   ThumbsDown,
@@ -7,6 +7,7 @@ import {
   User,
   Sparkles,
 } from "lucide-react";
+import { promptGemini } from "../../services/chatbotAPI";
 
 type ChatMessageProps = {
   sender: "user" | "bot";
@@ -26,41 +27,51 @@ export function ChatMessage({
   const isUser = sender === "user";
   const [showActions, setShowActions] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [messageText, setMessageText] = useState(text);
+  const [loading, setLoading] = useState(isTyping);
+
+  useEffect(() => {
+    const fetchBotReply = async () => {
+      if (sender === "bot" && text === "[IA_RESPONSE]") {
+        setLoading(true);
+        try {
+          const reply = await promptGemini("Olá! Em que posso ajudar?");
+          setMessageText(reply);
+        } catch (error) {
+          setMessageText("Ocorreu um erro ao gerar a resposta.");
+        } finally {
+          setLoading(false);
+        }
+      }
+    };
+
+    fetchBotReply();
+  }, [sender, text]);
 
   const copyToClipboard = () => {
-    navigator.clipboard.writeText(text);
+    navigator.clipboard.writeText(messageText);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
 
-  const formatTime = (date: Date) => {
-    return date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
-  };
+  const formatTime = (date: Date) =>
+    date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
 
-  const renderTypingIndicator = () => {
-    return (
-      <div className="flex space-x-1 items-center h-6 py-3">
+  const renderTypingIndicator = () => (
+    <div className="flex space-x-1 items-center h-6 py-3">
+      {[0, 150, 300].map((delay) => (
         <div
+          key={delay}
           className="w-2 h-2 rounded-full bg-blue-400 animate-bounce"
-          style={{ animationDelay: "0ms" }}
+          style={{ animationDelay: `${delay}ms` }}
         />
-        <div
-          className="w-2 h-2 rounded-full bg-blue-400 animate-bounce"
-          style={{ animationDelay: "150ms" }}
-        />
-        <div
-          className="w-2 h-2 rounded-full bg-blue-400 animate-bounce"
-          style={{ animationDelay: "300ms" }}
-        />
-      </div>
-    );
-  };
+      ))}
+    </div>
+  );
 
   return (
     <div
-      className={`flex items-start gap-2 group mb-4 ${
-        isUser ? "flex-row-reverse" : "flex-row"
-      }`}
+      className={`flex items-start gap-2 group mb-4 ${isUser ? "flex-row-reverse" : "flex-row"}`}
       onMouseEnter={() => setShowActions(true)}
       onMouseLeave={() => setShowActions(false)}
     >
@@ -71,11 +82,7 @@ export function ChatMessage({
           }`}
         >
           {avatarUrl ? (
-            <img
-              src={avatarUrl}
-              alt={isUser ? "Usuário" : "Lumino"}
-              className="w-8 h-8 rounded-full"
-            />
+            <img src={avatarUrl} alt={isUser ? "Usuário" : "Lumino"} className="w-8 h-8 rounded-full" />
           ) : isUser ? (
             <User size={16} className="text-green-600" />
           ) : (
@@ -92,51 +99,37 @@ export function ChatMessage({
         }`}
       >
         <div className="whitespace-pre-wrap break-words">
-          {isTyping && !isUser ? renderTypingIndicator() : text}
+          {loading && !isUser ? renderTypingIndicator() : messageText}
         </div>
 
-        <div
-          className={`text-xs text-gray-500 mt-1 ${
-            isUser ? "text-right" : "text-left"
-          }`}
-        >
+        <div className={`text-xs text-gray-500 mt-1 ${isUser ? "text-right" : "text-left"}`}>
           {formatTime(timestamp)}
         </div>
 
-        {showActions && !isTyping && (
+        {showActions && !loading && (
           <div
             className={`absolute ${
               isUser ? "left-0 -translate-x-full" : "right-0 translate-x-full"
-            } 
-            top-1/2 -translate-y-1/2 flex items-center gap-1 bg-white p-1 rounded-lg shadow-md border border-gray-100`}
+            } top-1/2 -translate-y-1/2 flex items-center gap-1 bg-white p-1 rounded-lg shadow-md border border-gray-100`}
           >
             {!isUser && (
               <>
-                <button
-                  className="p-1 hover:bg-gray-100 rounded-full transition-colors"
-                  title="Útil"
-                >
+                <button className="p-1 hover:bg-gray-100 rounded-full" title="Útil">
                   <ThumbsUp size={14} />
                 </button>
-                <button
-                  className="p-1 hover:bg-gray-100 rounded-full transition-colors"
-                  title="Não útil"
-                >
+                <button className="p-1 hover:bg-gray-100 rounded-full" title="Não útil">
                   <ThumbsDown size={14} />
                 </button>
               </>
             )}
             <button
-              className="p-1 hover:bg-gray-100 rounded-full transition-colors"
+              className="p-1 hover:bg-gray-100 rounded-full"
               title={copied ? "Copiado!" : "Copiar texto"}
               onClick={copyToClipboard}
             >
               <Copy size={14} className={copied ? "text-blue-500" : ""} />
             </button>
-            <button
-              className="p-1 hover:bg-gray-100 rounded-full transition-colors"
-              title="Mais opções"
-            >
+            <button className="p-1 hover:bg-gray-100 rounded-full" title="Mais opções">
               <MoreHorizontal size={14} />
             </button>
           </div>
